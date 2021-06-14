@@ -1,0 +1,10 @@
+data/*
+!data/.gitkeep
+
+.secrets/*
+!.secrets/.gitkeep
+
+dask-worker-space/
+.ipynb_checkpoints/
+
+*.pyc

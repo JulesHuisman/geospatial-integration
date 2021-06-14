@@ -1,0 +1,16 @@
+{
+  "python.pythonPath": "/home/jules/.local/share/virtualenvs/thesis-ijSlmaYU/bin/python",
+  "python.linting.flake8Enabled": true,
+  "python.linting.pylintEnabled": false,
+  "python.linting.enabled": false,
+  "python.analysis.diagnosticSeverityOverrides": {
+    "reportMissingImports": "none"
+  },
+  "[python]": {
+    "editor.formatOnSave": true
+  },
+  "python.analysis.extraPaths": [
+    "plugins/tap-geosource",
+    "plugins/tap-osm-poi",
+  ]
+}

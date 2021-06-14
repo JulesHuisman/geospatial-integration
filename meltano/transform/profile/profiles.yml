@@ -1,0 +1,18 @@
+config:
+  send_anonymous_usage_stats: False
+  use_colors: True
+  
+meltano:
+  target: bigquery
+  outputs:
+    bigquery:
+      type: bigquery
+      method: service-account
+      project: quantile
+      dataset: quantile
+      threads: 2
+      keyfile: /.secrets/target_bigquery_secret.json
+      timeout_seconds: 300
+      priority: interactive
+      retries: 1
+      location: EU

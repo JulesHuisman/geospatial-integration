@@ -1,0 +1,29 @@
+version: '3.8'
+services:
+  jupyter:
+    build: ./jupyter
+    container_name: thesis-jupyter
+    environment:
+      - NB_GID=100
+      - GRANT_SUDO=yes
+      - GOOGLE_APPLICATION_CREDENTIALS=/.secrets/target_bigquery_secret.json
+    user: root
+    volumes:
+      - ./data:/home/jovyan/work/data
+      - ./jupyter/notebooks:/home/jovyan/work
+      - ./.secrets:/.secrets
+    ports:
+      - 8888:8888
+
+  meltano:
+    build: ./meltano
+    container_name: thesis-meltano
+    volumes:
+      - ./data:/data
+      - ./meltano:/project
+      - ./plugins:/plugins
+      - ./.secrets:/.secrets
+    command: ui
+    ports:
+      - 5000:5000
+    restart: unless-stopped

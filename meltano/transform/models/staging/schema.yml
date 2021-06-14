@@ -1,0 +1,21 @@
+
+version: 2
+
+sources:
+  - name: ingestion
+    description: The dataset where meltano ingests all the data.
+    tables:
+      - name: energy_labels
+      - name: leefbaarometer_buurten_2018
+      - name: nummeraanduiding
+      - name: points
+      - name: verblijfsobject
+      - name: wijkenbuurten2019_cbs_buurten_2019
+      - name: wijkenbuurten2020_cbs_buurten_2020
+      - name: pc6
+
+models:
+    - name: points_of_interest
+      description: Openstreetmap point of interest view, here the tags are extracted from the original 'other_tags' field in the ingestion table.
+    - name: housing
+      description: All the housing objects in the Netherlands. The addresses are joined to the housing in this view. The view also contains outdated objects.

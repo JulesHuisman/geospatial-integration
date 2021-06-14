@@ -1,0 +1,84 @@
+version: 1
+send_anonymous_usage_stats: true
+project_id: 5a4b74a0-f64c-4562-96fa-d0f83f170983
+plugins:
+  extractors:
+  - name: tap-geosource
+    namespace: tap_geosource
+    pip_url: git+https://github.com/JulesHuisman/tap-geosource.git
+    executable: tap-geosource
+    capabilities:
+    - catalog
+    - discover
+    settings:
+    - name: path
+    - name: include_layers
+    - name: source_srid
+    - name: target_srid
+  - name: tap-spreadsheets-anywhere
+    namespace: tap_spreadsheets_anywhere
+    pip_url: git+https://github.com/JulesHuisman/tap-spreadsheets-anywhere.git
+    executable: tap-spreadsheets-anywhere
+    capabilities:
+    - catalog
+    - discover
+    - state
+  - name: tap-livability
+    inherit_from: tap-geosource
+    config:
+      path: WFS:http://geo.leefbaarometer.nl/leefbaarometer/ows?service=WFS&version=1.0.0
+      target_srid: 4326
+      include_layers:
+        - leefbaarometer_buurten_2014
+        - leefbaarometer_buurten_2016
+        - leefbaarometer_buurten_2018
+  - name: tap-demographics
+    inherit_from: tap-geosource
+    config:
+      path: https://geodata.nationaalgeoregister.nl/cbspostcode6/wms?&request=GetCapabilities&service=wms
+      target_srid: 4326
+  - name: tap-vbo
+    inherit_from: tap-geosource
+    config:
+      path: /data/vbo
+      source_srid: 28992
+      target_srid: 4326
+  - name: tap-num
+    inherit_from: tap-geosource
+    config:
+      path: /data/num
+      source_srid: 28992
+      target_srid: 4326
+  - name: tap-osm
+    inherit_from: tap-geosource
+    config:
+      path: /data/netherlands.osm.pbf
+      target_srid: 4326
+      include_layers:
+        - points
+  - name: tap-energy-labels
+    inherit_from: tap-spreadsheets-anywhere
+    config:
+      tables:
+      - path: file:///data
+        name: energy_labels
+        pattern: energy.csv
+        start_date: '2000-01-01T00:00:00Z'
+        key_properties: []
+        format: csv
+  loaders:
+  - name: target-bigquery
+    pip_url: git+https://github.com/JulesHuisman/target-bigquery.git@feature/streaming
+    config:
+      project_id: quantile
+      dataset_id: ingestion
+      add_metadata_columns: true
+      credentials_path: /.secrets/target_bigquery_secret.json
+      location: EU
+      replication_method: truncate
+  transformers:
+  - name: dbt
+    pip_url: dbt==0.19.1
+  # files:
+  # - name: dbt
+  #   pip_url: git+https://gitlab.com/meltano/files-dbt.git
