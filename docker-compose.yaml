@@ -21,7 +21,6 @@ services:
     volumes:
       - ./data:/data
       - ./meltano:/project
-      - ./plugins:/plugins
       - ./.secrets:/.secrets
     command: ui
     ports:
